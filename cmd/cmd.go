@@ -3,8 +3,8 @@ package cmd
 import "flag"
 
 type CMD interface {
-	//Usage()
-	//Parse()
+	Usage()
+	Run()
 }
 
 type baseCMD struct {

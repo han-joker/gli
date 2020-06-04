@@ -3,6 +3,7 @@ package cmd
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 type GLI struct {
@@ -17,16 +18,36 @@ func New() *GLI {
 
 func (g *GLI) Run() {
 	g.initCmd()
-	flag.Parse()
-	g.Usage()
+
+	cmdStr := ""
+	if len(os.Args) > 1 {
+		cmdStr = os.Args[1]
+	}
+	if cmd, ok := g.commands[cmdStr]; ok {
+		cmd.Run()
+	} else {
+		g.Usage()
+	}
 }
 
 func (g *GLI) initCmd() {
-	versionCMD := &Version{}
-	versionCMD.Title = "version"
-	versionCMD.FlagSet = flag.NewFlagSet("version", flag.ExitOnError)
-	g.commands["version"] = versionCMD
+	//g.initCMDVersion()
+	g.initCMDInit()
 }
+
+func (g *GLI) initCMDInit() {
+	cmd := &Init{}
+	cmd.Title = "init"
+	cmd.FlagSet = flag.NewFlagSet("init", flag.ExitOnError)
+	g.commands["init"] = cmd
+}
+
+//func (g *GLI) initCMDVersion() {
+//	cmd := &Version{}
+//	cmd.Title = "version"
+//	cmd.FlagSet = flag.NewFlagSet("version", flag.ExitOnError)
+//	g.commands["version"] = cmd
+//}
 
 func (g *GLI) Usage() {
 	fmt.Println("Gli is a Scaffold based on gin.")
@@ -37,9 +58,9 @@ func (g *GLI) Usage() {
 	fmt.Println()
 	fmt.Println("The commands are:")
 	fmt.Println()
-	fmt.Printf("\t%s\t\t%s\n", "build", "build code.")
-	fmt.Printf("\t%s\t\t%s\n", "init", "init a gli app based on go module.")
-	fmt.Printf("\t%s\t\t%s\n", "version", "print Go version")
+	//fmt.Printf("\t%s\t\t%s\n", "build", "build router, handler and so on.")
+	fmt.Printf("\t%s\t\t%s\n", "init", "init a gin application based on go module.")
+	//fmt.Printf("\t%s\t\t%s\n", "version", "print Go version")
 	fmt.Println()
-	fmt.Println("Use `go help <command>` for more information about a command.")
+	fmt.Println("Use `gli help <command>` for more information about a command.")
 }
