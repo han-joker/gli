@@ -31,8 +31,8 @@ func (g *GLI) Run() {
 }
 
 func (g *GLI) initCmd() {
-	//g.initCMDVersion()
 	g.initCMDInit()
+	g.initCMDGen()
 }
 
 func (g *GLI) initCMDInit() {
@@ -40,6 +40,13 @@ func (g *GLI) initCMDInit() {
 	cmd.Title = "init"
 	cmd.FlagSet = flag.NewFlagSet("init", flag.ExitOnError)
 	g.commands["init"] = cmd
+}
+
+func (g *GLI) initCMDGen() {
+	cmd := &Gen{}
+	cmd.Title = "gen"
+	cmd.FlagSet = flag.NewFlagSet("gen", flag.ExitOnError)
+	g.commands["gen"] = cmd
 }
 
 //func (g *GLI) initCMDVersion() {
@@ -58,7 +65,7 @@ func (g *GLI) Usage() {
 	fmt.Println()
 	fmt.Println("The commands are:")
 	fmt.Println()
-	//fmt.Printf("\t%s\t\t%s\n", "build", "build router, handler and so on.")
+	fmt.Printf("\t%s\t\t%s\n", "gen", "generator API, router, handler and so on.")
 	fmt.Printf("\t%s\t\t%s\n", "init", "init a gin application based on go module.")
 	//fmt.Printf("\t%s\t\t%s\n", "version", "print Go version")
 	fmt.Println()

@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/han-joker/gli/gen"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"runtime"
 )
 
@@ -13,7 +15,21 @@ type Init struct {
 }
 
 func (c *Init) Run() {
-	//c.FlagSet.Usage = c.Usage
+	path, err := os.Getwd()
+	if err != nil {
+		fmt.Println("gli init: dir error.")
+		return
+	}
+	fs, err := ioutil.ReadDir(path)
+	if err!=nil {
+		fmt.Println("gli init: dir error.")
+		return
+	}
+	if len(fs) > 0 {
+		fmt.Println("gli init: dir not empty.")
+		return
+	}
+
 	c.FlagSet.Parse(os.Args[2:])
 
 	if c.FlagSet.NArg() > 1 {
@@ -26,7 +42,7 @@ func (c *Init) Run() {
 		 module = c.FlagSet.Arg(0)
 	} else if c.FlagSet.NArg() == 0 {
 		// 基于目录名推测 module
-		module = "test"
+		module = filepath.Base(path)
 	}
 
 	// 生成 go.mod
